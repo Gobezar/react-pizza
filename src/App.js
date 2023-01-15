@@ -16,7 +16,7 @@ const [searchValue, setSearchValue] = useState('')
   return (
       <div className="wrapper">
        <SearchContext.Provider value = {{searchValue, setSearchValue}}>
-s
+
        <Header />
         <div className="content">
           <div className="container">
