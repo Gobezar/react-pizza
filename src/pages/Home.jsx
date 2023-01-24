@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import axios from 'axios';
+import qs from 'qs'
+import {useNavigate} from 'react-router-dom'
 import Sort from "../Components/Sort";
 import Categories from "../Components/Categories";
 import PizzaBlock from "../Components/PizzaBlock/PizzaBlock";
@@ -10,7 +12,9 @@ import { SearchContext } from '../App';
 import {setCategoryId} from '../redux/slices/filterSlice'
 
 
+
 export const Home = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const {categoryId, sort} = useSelector((state) => state.filter);
     const sortType = sort.sortProperty;
@@ -25,6 +29,11 @@ export const Home = () => {
         dispatch(setCategoryId(id))
     }
 
+    useEffect(() => {
+        if(window.location.search) {
+            const params = qs.parse(window.location.search.substring(1));
+        }
+    }, [])
 
     useEffect(() => {
         setIsLoading(true);
@@ -40,7 +49,17 @@ export const Home = () => {
         })
         window.scrollTo(0,0)
       }, [categoryId, sortType, searchValue, page])
-      
+
+
+        useEffect(() => {
+            const queryString = qs.stringify({
+                sortProperty: sort.sortProperty,
+                categoryId,
+                page,
+            })
+            navigate(`?${queryString}`)
+        }, [categoryId, sort.sortProperty, page])
+
       const skeleton = [...new Array(6)].map((_, index) => <Skeleton key={index} />)
       const pizzas = items.map((obj, index) => (
         <PizzaBlock
@@ -49,6 +68,7 @@ export const Home = () => {
             image={obj.imageUrl}
             sizes={obj.sizes}
             types={obj.types}
+            id={obj.id}
             key={obj.id}
         />
     ))

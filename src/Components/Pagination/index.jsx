@@ -6,6 +6,7 @@ import styles from './Pagination.module.scss'
 
 const Pagination = ({page}) => {
 
+
 const dispatch = useDispatch();
 
     return (
